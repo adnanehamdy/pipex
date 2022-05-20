@@ -21,19 +21,21 @@ void	duplicate_fd(int *fd, int file)
 	close(fd[1]);
 }
 
-void	error_exit(void)
+void	error_exit(char *c, int num_code)
 {
-	perror("error");
-	exit(1);
+	ft_putstr(c);
+	ft_putstr("\n");
+	exit(num_code);
 }
 
-int	open_fd(char *c)
+int	open_fd(char *c, int here_doc)
 {
 	int	fd;
 
-	fd = open(c, O_RDONLY);
-	if (fd == -1)
-		error_exit();
+	if (here_doc)
+		fd = open(c, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	else
+		fd = open(c, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	return (fd);
 }
 

@@ -6,13 +6,31 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 15:43:12 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/28 09:31:02 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/02/28 09:53:09 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <fcntl.h>
 #include "../pipex.h"
+
+char	*ft_strchr(const char *s, int c)
+{
+	size_t	i;
+	char	*s1;
+
+	i = 0;
+	s1 = (char *)s;
+	while (s1[i])
+	{
+		if ((char)c == s1[i])
+			return (&s1[i]);
+		i++;
+	}
+	if (s1[i] == (char)c)
+		return (&s1[i]);
+	return (NULL);
+}
 
 static void	_freemem(char **ptr)
 {

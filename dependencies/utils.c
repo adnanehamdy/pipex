@@ -12,14 +12,18 @@
 
 #include "../pipex.h"
 
-int	open_file(char *c)
+int	find_char(char *s, char c)
 {
-	int	fd;
+	int	i;
 
-	fd = open(c, O_CREAT | O_RDWR, 0777);
-	if (fd == -1)
-		error_exit();
-	return (fd);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 int	fork_it(void)
@@ -28,7 +32,7 @@ int	fork_it(void)
 
 	pid = fork();
 	if (pid == -1)
-		error_exit();
+		error_exit("error can't fork", 1);
 	return (pid);
 }
 
@@ -42,41 +46,12 @@ void	free_mem(char **path)
 	free(path);
 }
 
-char	*find_path(char **envp, char *cmd)
-{
-	char	**path;
-	char	*tmp;
-	char	*tmp2;
-	int		i;
-
-	i = find_path_line(envp);
-	path = ft_split(&envp[i][5], ':');
-	i = 0;
-	while (path[i])
-	{
-		tmp = ft_strjoin(path[i], "/");
-		tmp2 = ft_strjoin(tmp, cmd);
-		free(tmp);
-		if (!(access(tmp2, X_OK)))
-		{
-			free_mem(path);
-			return (tmp2);
-		}
-		else
-			free(tmp2);
-		i++;
-	}
-	free_mem(path);
-	error_exit();
-	exit(1);
-}
-
 char	**split_cmd(char *cmd)
 {
 	char	**command;
 
 	command = ft_split(cmd, ' ');
 	if (!command)
-		error_exit();
+		error_exit("not enought memory", 1);
 	return (command);
 }

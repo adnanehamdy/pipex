@@ -12,15 +12,30 @@
 
 #include "pipex.h"
 
-void	input_cmd(char **envp, char *cmd)
+void	input_cmd(char **envp, char *cmd, int *fd1, char *file)
 {
 	char	*path;
 	char	**command;
+	int		fd;
 
+	fd = open(file, O_RDONLY);
+	if (fd == -1)
+	{
+		if (!access(file, F_OK))
+			error_exit(ft_strjoin("pipex : permission denied :",
+					file), 1);
+		error_exit(ft_strjoin("pipex : no such file or directory :",
+				file), 1);
+	}
+	duplicate_fd(fd1, fd);
 	command = split_cmd(cmd);
-	path = find_path(envp, command[0]);
+	if (!find_char(command[0], '/'))
+		path = find_path(envp, command[0]);
+	else
+		path = command[0];
 	if (execve(path, command, envp) == -1)
-		error_exit();
+		error_exit(ft_strjoin("pipex : no such file or directory :",
+				*command), 127);
 }
 
 void	output_cmd(char **envp, char **av)
@@ -29,17 +44,24 @@ void	output_cmd(char **envp, char **av)
 	char	**command;
 
 	command = split_cmd(av[3]);
-	path = find_path(envp, command[0]);
+	if (!find_char(command[0], '/'))
+		path = find_path(envp, command[0]);
+	else if (*command[0] != '/')
+		path = ft_strjoin("/", command[0]);
+	else
+		path = command[0];
 	if (execve(path, command, envp) == -1)
-		error_exit();
+		error_exit(ft_strjoin("pipex : no such file or directory : ",
+				*command), 127);
 }
 
 void	second_cmd(char **av, int *fd1, char **envp)
 {
 	int	fd;
 
-	unlink(av[4]);
-	fd = open_file(av[4]);
+	fd = open_fd(av[4], 0);
+	if (fd == -1)
+		error_exit("can't create file descriptor\n", 1);
 	duplicate_file(fd1, fd);
 	output_cmd(envp, av);
 	close(fd1[0]);
@@ -49,9 +71,10 @@ void	second_cmd(char **av, int *fd1, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	pid_t	pid[2];
-	int		fd;
 	int		fd1[2];
+	int		cmd_num;
 
+	cmd_num = 2;
 	if (ac != 5)
 	{
 		write(2, "error check the arguments number\n", 33);
@@ -60,11 +83,7 @@ int	main(int ac, char **av, char **envp)
 	pipe(fd1);
 	pid[0] = fork_it();
 	if (pid[0] == 0)
-	{
-		fd = open_fd(av[1]);
-		duplicate_fd(fd1, fd);
-		input_cmd(envp, av[2]);
-	}
+		input_cmd(envp, av[cmd_num], fd1, av[1]);
 	pid[1] = fork_it();
 	if (pid[1] == 0)
 		second_cmd(av, fd1, envp);

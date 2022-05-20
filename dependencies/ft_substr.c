@@ -6,7 +6,7 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 13:40:50 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/24 15:29:20 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/03/11 10:58:48 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		c[i++] = s[start++];
 	c[i] = 0;
 	return (c);
+}
+
+void	ft_putstr(char *s)
+{
+	size_t	i;
+
+	if (!s)
+		return ;
+	i = ft_strlen(s);
+	write(2, s, i);
 }

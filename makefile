@@ -3,14 +3,14 @@ CC = gcc
 AR = ar rc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = pipex.c dependencies/utils.c dependencies/utils_plus.c ./dependencies/ft_strdup.c  ./dependencies/ft_strjoin.c ./dependencies/ft_split.c \
-				./dependencies/ft_strlen.c ./dependencies/ft_strncmp.c ./dependencies/ft_substr.c
+SRCS = pipex.c dependencies/utils.c dependencies/utils_plus.c dependencies/ft_strdup.c  dependencies/ft_strjoin.c dependencies/ft_split.c \
+				dependencies/ft_strlen.c dependencies/ft_strncmp.c dependencies/ft_substr.c dependencies/find_path.c
 
 OBJS = $(SRCS:.c=.o)
 
 
-B_SRCS =  bonus.c dependencies/utils.c dependencies/utils_plus.c limiter.c ./get_next_line/get_next_line.c ./get_next_line/get_next_line_utils.c ./dependencies/ft_strdup.c  ./dependencies/ft_strjoin.c ./dependencies/ft_split.c \
-				dependencies/ft_strlen.c dependencies/ft_strncmp.c dependencies/ft_substr.c
+B_SRCS =  bonus.c dependencies/utils.c dependencies/utils_plus.c limiter.c ./get_next_line/get_next_line.c  dependencies/ft_strdup.c  dependencies/ft_strjoin.c dependencies/ft_split.c \
+				dependencies/ft_strlen.c dependencies/ft_strncmp.c dependencies/ft_substr.c dependencies/utils_bonus.c dependencies/find_path.c
 
 B_OBJS = $(B_SRCS:.c=.o)
 
